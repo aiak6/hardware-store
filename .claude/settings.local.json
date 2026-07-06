@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ssh *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{ssl_verify_result}\\\\n\" --max-time 15 https://store.aiturgan.space/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} -> %{redirect_url}\\\\n\" http://store.aiturgan.space/)",
+      "Bash(curl -s https://store.aiturgan.space/health)",
+      "Bash(perl -pi -e 's|background: linear-gradient\\\\\\(120deg, #fff 20%, var\\\\\\(--green-2\\\\\\)\\\\\\);|background: linear-gradient\\(120deg, #fff 10%, var\\(--accent\\) 45%, var\\(--green-2\\) 85%\\);|' styles.css)",
+      "Bash(perl -0pi -e 's|border-color: rgba\\\\\\(118,185,0,\\\\.45\\\\\\);\\\\n  box-shadow: 0 14px 40px rgba\\\\\\(0,0,0,\\\\.45\\\\\\),\\\\n              0 0 0 1px rgba\\\\\\(118,185,0,\\\\.12\\\\\\),\\\\n              0 0 26px rgba\\\\\\(118,185,0,\\\\.08\\\\\\);|border-color: rgba\\(76,194,255,.5\\);\\\\n  box-shadow: 0 14px 40px rgba\\(0,0,0,.45\\),\\\\n              0 0 0 1px rgba\\(76,194,255,.14\\),\\\\n              0 0 28px rgba\\(47,107,255,.12\\);|' styles.css)",
+      "Bash(curl -s https://store.aiturgan.space/styles.css)",
+      "Bash(perl -pi -e 's|<p>Every \"I want this build\" request, saved in our Postgres database\\\\. Newest first\\\\.</p>|<p>Every \"I want this build\" request, saved in our Postgres database. Newest first. Contact details are masked to protect our customers\\\\x27 privacy.</p>|' render.js)",
+      "Bash(node --check render.js)",
+      "Bash(node test.js)",
+      "Bash(node --check public/app.js)",
+      "Bash(perl -pi -e 's/styles\\\\.css\\\\?v=3/styles.css?v=4/; s/app\\\\.js\\\\?v=3/app.js?v=4/' render.js)",
+      "Read(//Users/aiturgankubanalieva/code/**)",
+      "Bash(rsync -az --delete --exclude node_modules --exclude .env -e \"ssh -i ~/.ssh/hardware-store.pem -o BatchMode=yes\" store/ ec2-user@54.158.240.124:/home/ec2-user/rack-and-reason/)",
+      "Bash(curl -s \"https://store.aiturgan.space/styles.css?v=4\")",
+      "Bash(curl -s \"https://store.aiturgan.space/app.js?v=4\")",
+      "Bash(curl -s https://store.aiturgan.space/)",
+      "Bash(curl -s \"https://store.aiturgan.space/app.js?v=5\")",
+      "Bash(perl -pi -e 's/v=9/v=10/g' render.js)"
+    ]
+  }
+}

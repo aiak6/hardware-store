@@ -1,0 +1,13 @@
+{
+  "name": "rack-and-reason",
+  "version": "1.0.0",
+  "description": "Aiturgan's Rack & Reason — an AI hardware store that teaches.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
+  }
+}

@@ -1,0 +1,827 @@
+:root {
+  --bg: #060a14;
+  --bg-2: #0b1322;
+  --panel: #101a2e;
+  --panel-2: #15233c;
+  --line: #24365a;
+  --text: #e8eef7;
+  --muted: #94a6c0;
+  --green: #76b900;      /* NVIDIA green — brand + primary CTAs */
+  --green-2: #9be600;
+  --accent: #4cc2ff;     /* electric blue — the store's dominant hue */
+  --accent-2: #2f6bff;   /* deep blue */
+  --danger: #ff5d5d;
+  --radius: 14px;
+  --shadow: 0 8px 30px rgba(0,0,0,.35);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  /* Deep-blue "datacenter blueprint": strong blue washes + a faint engineering
+     grid, so the store looks like the hardware it sells. */
+  background:
+    repeating-linear-gradient(0deg,  rgba(76,194,255,.05) 0 1px, transparent 1px 52px),
+    repeating-linear-gradient(90deg, rgba(76,194,255,.05) 0 1px, transparent 1px 52px),
+    radial-gradient(1400px 720px at 85% -12%, rgba(47,107,255,.34), transparent 62%),
+    radial-gradient(1000px 640px at -8% 12%, rgba(76,194,255,.22), transparent 58%),
+    radial-gradient(1000px 640px at 50% 118%, rgba(47,107,255,.22), transparent 62%),
+    linear-gradient(180deg, #0a142c, var(--bg) 46%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text);
+  font: 16px/1.6 "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: .1px;
+}
+
+/* Typography voices: Space Grotesk for display, JetBrains Mono for numbers —
+   headlines read like a tech brand, figures read like a spec sheet. */
+h1, h2, h3, h4, .brand-name {
+  font-family: "Space Grotesk", "Inter", "Segoe UI", system-ui, sans-serif;
+  letter-spacing: -.01em;
+}
+.stat-value, .bar-val, .build-line .qty, .reqnum strong, code, .mono, td.mono {
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+a { color: var(--accent); text-decoration: none; }
+code { background: var(--panel-2); padding: .15em .45em; border-radius: 6px; color: var(--green-2); font-size: .92em; }
+
+/* Header / footer */
+header.site {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: 1rem clamp(1rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(6,12,28,.78); backdrop-filter: blur(12px);
+}
+.brand { display: flex; align-items: center; gap: .6rem; color: var(--text); font-weight: 700; }
+.brand-mark { color: var(--green); font-size: 1.4rem; }
+.brand-name { font-size: 1.05rem; letter-spacing: .3px; }
+header nav { display: flex; gap: .4rem; flex-wrap: wrap; }
+header nav a {
+  color: var(--muted); padding: .45rem .8rem; border-radius: 999px; font-size: .92rem;
+  border: 1px solid transparent;
+}
+header nav a:hover { color: var(--text); background: var(--panel); }
+header nav a.active { color: var(--green-2); border-color: var(--line); background: var(--panel); }
+
+main { max-width: 1120px; margin: 0 auto; padding: clamp(1.5rem, 4vw, 3rem); }
+
+footer.site {
+  max-width: 1120px; margin: 2rem auto 3rem; padding: 1.5rem clamp(1rem, 4vw, 3rem) 0;
+  border-top: 1px solid var(--line); color: var(--muted);
+}
+footer .fine { font-size: .85rem; }
+
+/* Hero */
+.hero { padding: 2.5rem 0 1.5rem; }
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.4rem); margin: 0 0 .5rem; line-height: 1.05;
+  background: linear-gradient(120deg, #fff 10%, var(--accent) 45%, var(--green-2) 85%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+.lede { font-size: 1.25rem; color: var(--text); margin: .3rem 0; }
+.sub { color: var(--muted); max-width: 60ch; }
+.cta-row { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.4rem; }
+
+/* Buttons */
+.btn {
+  display: inline-block; padding: .7rem 1.15rem; border-radius: 10px;
+  border: 1px solid var(--line); color: var(--text); background: var(--panel);
+  font-weight: 600; cursor: pointer; transition: transform .06s ease, background .15s;
+}
+.btn:hover { transform: translateY(-1px); background: var(--panel-2); }
+.btn.primary { background: linear-gradient(120deg, var(--green), #5a9000); color: #06210a; border-color: transparent; }
+.btn.primary:hover { background: linear-gradient(120deg, var(--green-2), var(--green)); }
+.btn.ghost { background: transparent; }
+
+/* Cards + grids */
+.card {
+  background: linear-gradient(180deg, var(--panel), var(--bg-2));
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.4rem; box-shadow: var(--shadow); margin-bottom: 1.2rem;
+}
+.grid { display: grid; gap: 1.2rem; }
+.grid.one { grid-template-columns: 1fr; }
+.grid.two { grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); }
+.grid.three { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+
+.page-head { margin-bottom: 1.4rem; }
+.page-head h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 .4rem; }
+.page-head h1::after {
+  content: ""; display: block; width: 64px; height: 4px; margin-top: .5rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent), var(--green-2));
+}
+.page-head p { color: var(--muted); max-width: 75ch; }
+.math-line code { display: inline-block; margin-top: .4rem; }
+
+.feature h3 { margin: .2rem 0 .5rem; color: var(--green-2); }
+.explainer h2 { margin-top: 0; }
+
+/* Product / model cards */
+.product .tier, .model .params {
+  display: inline-block; font-size: .72rem; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--accent); border: 1px solid rgba(76,194,255,.35); padding: .2rem .55rem;
+  border-radius: 999px; background: rgba(47,107,255,.08);
+}
+.product h3, .model h3 { margin: .6rem 0 .3rem; }
+.blurb { color: var(--muted); }
+.realworld { font-size: .9rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: .8rem; margin-top: .4rem; }
+.model .license { color: var(--accent); font-size: .85rem; margin: .1rem 0 .4rem; }
+.model h4 { margin: 1.1rem 0 .5rem; color: var(--text); }
+
+/* Stat + explanation unit */
+.stats { display: grid; gap: .55rem; margin: .8rem 0; }
+.stat { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: .6rem .8rem; }
+.stat-head { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+.stat-label { color: var(--muted); font-size: .9rem; }
+.stat-value { font-weight: 700; color: var(--text); text-align: right; }
+.explain { margin-top: .35rem; }
+.explain summary {
+  cursor: pointer; color: var(--accent); font-size: .82rem; list-style: none; user-select: none;
+}
+.explain summary::before { content: "ⓘ "; }
+.explain summary::-webkit-details-marker { display: none; }
+.explain[open] summary { color: var(--green-2); }
+.explain p { color: var(--muted); font-size: .88rem; margin: .5rem 0 0; }
+.explain p.when { color: var(--text); }
+
+/* Build block */
+.build-line { display: flex; align-items: baseline; gap: .6rem; font-size: 1.15rem; margin-bottom: .3rem; }
+.build-line .qty { color: var(--green-2); font-weight: 800; }
+.build-line .unit { font-weight: 600; }
+.cluster { margin: .6rem 0; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-2); }
+.cluster.on { border-color: rgba(118,185,0,.4); }
+
+/* Journeys */
+.journey h3 { color: var(--green-2); margin-top: 0; }
+.journey .why { color: var(--muted); }
+.journey h4 { margin: 1rem 0 .5rem; }
+
+/* Form */
+.form-card form { display: grid; gap: 1rem; max-width: 480px; }
+.form-card label { display: grid; gap: .35rem; color: var(--muted); font-size: .9rem; }
+.form-card input {
+  background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+  padding: .7rem .8rem; color: var(--text); font-size: 1rem;
+}
+.form-card input:focus { outline: 2px solid var(--green); border-color: transparent; }
+.quote-summary { border: 1px solid var(--line); border-radius: 10px; padding: 1rem; margin-bottom: 1.2rem; background: var(--bg-2); }
+.quote-summary h3 { margin-top: 0; color: var(--green-2); }
+.quote-summary p { margin: .3rem 0; color: var(--muted); }
+
+/* Confirmation */
+.confirm .reqnum { font-size: 1.4rem; }
+.confirm .reqnum strong { color: var(--green-2); }
+.muted { color: var(--muted); }
+
+/* Table */
+.table-card { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { text-align: left; padding: .6rem .7rem; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+td.mono, .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+td.empty { text-align: center; color: var(--muted); padding: 2rem; }
+
+@media (max-width: 640px) {
+  header.site { flex-direction: column; align-items: flex-start; }
+}
+
+/* --------------------------------------------------------------------------
+   Motion & animation — tasteful, GPU-cheap, and fully disabled for users
+   who prefer reduced motion.
+   -------------------------------------------------------------------------- */
+
+/* Scroll reveal (elements get .reveal from app.js, .in when visible) */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .55s ease, transform .55s cubic-bezier(.2, .7, .3, 1);
+  will-change: opacity, transform;
+}
+.reveal.in { opacity: 1; transform: none; }
+
+/* Hero title shimmer */
+.hero h1 {
+  background-size: 200% auto;
+  animation: shimmer 7s ease-in-out infinite alternate;
+}
+@keyframes shimmer {
+  from { background-position: 0% center; }
+  to   { background-position: 100% center; }
+}
+
+/* Brand lightning pulse */
+.brand-mark {
+  display: inline-block;
+  transform-origin: 50% 60%;
+  animation: sparkle 3s ease-in-out infinite;
+}
+@keyframes sparkle {
+  0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 0 rgba(155,230,0,0)); }
+  50%      { transform: scale(1.12); filter: drop-shadow(0 0 7px rgba(155,230,0,.55)); }
+}
+
+/* Card hover: lift + green glow */
+.card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(76,194,255,.5);
+  box-shadow: 0 14px 40px rgba(0,0,0,.45),
+              0 0 0 1px rgba(76,194,255,.14),
+              0 0 28px rgba(47,107,255,.12);
+}
+
+/* Stat rows warm up on hover */
+.stat { transition: border-color .2s ease, background .2s ease; }
+.stat:hover { border-color: rgba(53,193,255,.45); background: var(--panel); }
+
+/* Buttons: lift + sheen sweep on primary */
+.btn { position: relative; overflow: hidden; transition: transform .15s ease, background .2s, box-shadow .2s; }
+.btn:hover { transform: translateY(-2px); }
+.btn.primary:hover { box-shadow: 0 6px 24px rgba(118,185,0,.35); }
+.btn.primary::after {
+  content: ""; position: absolute; top: 0; left: -70%; width: 45%; height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255,255,255,.35), transparent);
+  transform: skewX(-20deg); transition: left .5s ease; pointer-events: none;
+}
+.btn.primary:hover::after { left: 130%; }
+
+/* Explanations slide open gently */
+.explain p { animation: fadeDown .3s ease both; }
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Nav + table rows */
+header nav a { transition: color .2s ease, background .2s ease; }
+tbody tr { transition: background .15s ease; }
+tbody tr:hover { background: rgba(53,193,255,.05); }
+
+/* Accessibility: honor reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .hero h1, .brand-mark { animation: none; }
+  .card, .btn, .stat { transition: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Aurora background — two slow-drifting blue glows behind the content.
+   -------------------------------------------------------------------------- */
+body::before, body::after {
+  content: ""; position: fixed; z-index: -1; border-radius: 50%;
+  filter: blur(80px); opacity: .55; pointer-events: none;
+}
+body::before {
+  width: 780px; height: 780px; top: -260px; right: -180px;
+  background: radial-gradient(circle, rgba(47,107,255,.55), rgba(76,194,255,.2) 45%, transparent 68%);
+  animation: drift1 22s ease-in-out infinite alternate;
+}
+body::after {
+  width: 680px; height: 680px; bottom: -240px; left: -180px;
+  background: radial-gradient(circle, rgba(76,194,255,.45), rgba(47,107,255,.18) 45%, transparent 68%);
+  animation: drift2 28s ease-in-out infinite alternate;
+}
+@keyframes drift1 { to { transform: translate(-170px, 120px) scale(1.2); } }
+@keyframes drift2 { to { transform: translate(190px, -110px) scale(1.15); } }
+
+/* --------------------------------------------------------------------------
+   Compare page — product chips + animated bars.
+   -------------------------------------------------------------------------- */
+.compare-picker { display: flex; flex-wrap: wrap; gap: .5rem; margin: .4rem 0 1.2rem; }
+.chip {
+  border: 1px solid var(--line); background: var(--panel); border-radius: 999px;
+  padding: .5rem .95rem; cursor: pointer; color: var(--muted); font-size: .9rem;
+  transition: all .2s ease; user-select: none;
+}
+.chip:hover { transform: translateY(-1px); border-color: var(--accent); color: var(--text); }
+.chip.on {
+  color: #041018; font-weight: 700; border-color: transparent;
+  background: linear-gradient(120deg, var(--accent-2), var(--accent));
+  box-shadow: 0 4px 18px rgba(47,107,255,.35);
+}
+.bar-group { margin-top: 1.3rem; }
+.bar-group h4 { margin: 0 0 .2rem; }
+.bar-group .bar-note { color: var(--muted); font-size: .85rem; margin: 0 0 .6rem; }
+.bar-row { display: grid; grid-template-columns: 230px 1fr 120px; gap: .7rem; align-items: center; margin: .4rem 0; }
+.bar-name { font-size: .88rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { display: block; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; height: 14px; overflow: hidden; }
+.bar-fill {
+  display: block;
+  height: 100%; border-radius: 999px; width: 0;
+  transition: width .8s cubic-bezier(.2, .7, .3, 1);
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+.bar-fill.green { background: linear-gradient(90deg, #5a9000, var(--green-2)); }
+.bar-fill.amber { background: linear-gradient(90deg, #b8860b, #ffd34d); }
+.bar-val { font-size: .88rem; text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .bar-row { grid-template-columns: 1fr; gap: .15rem; }
+  .bar-val { text-align: left; }
+}
+
+/* --------------------------------------------------------------------------
+   Find-my-match wizard.
+   -------------------------------------------------------------------------- */
+.wizard .progress {
+  height: 6px; background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: 999px; overflow: hidden; margin-bottom: 1.4rem;
+}
+.wizard .progress i {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  transition: width .45s ease;
+}
+.wstep { display: none; }
+.wstep.on { display: block; animation: stepIn .4s ease both; }
+@keyframes stepIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.option-grid { display: grid; gap: .8rem; margin-top: 1rem; }
+.opt {
+  text-align: left; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--panel); color: var(--text); padding: 1rem 1.1rem;
+  cursor: pointer; transition: all .2s ease; font: inherit; font-size: 1rem;
+}
+.opt small { display: block; color: var(--muted); margin-top: .25rem; }
+.opt:hover { border-color: var(--accent); transform: translateX(5px); background: var(--panel-2); }
+.wizard .back { margin-top: 1.2rem; background: transparent; }
+.match-result .big { font-size: 1.45rem; margin: .3rem 0 .1rem; color: var(--accent); }
+.match-note {
+  border: 1px solid rgba(255,211,77,.4); background: rgba(255,211,77,.06);
+  border-radius: 10px; padding: .7rem .9rem; margin: .8rem 0; font-size: .92rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before, body::after { animation: none; }
+  .bar-fill, .wizard .progress i { transition: none; }
+  .wstep.on { animation: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Circuitscape — AI chips etched into the background, with circuit traces
+   and light pulses traveling along them like data packets. Plus a slowly
+   scrolling perspective floor. Built by app.js as progressive enhancement.
+   -------------------------------------------------------------------------- */
+.circuitscape {
+  position: fixed; inset: 0; z-index: -1;
+  pointer-events: none; overflow: hidden;
+}
+.circuitscape .floor {
+  position: absolute; left: -25%; right: -25%; bottom: -42%; height: 62%;
+  background:
+    repeating-linear-gradient(90deg, rgba(76,194,255,.14) 0 1px, transparent 1px 90px),
+    repeating-linear-gradient(0deg,  rgba(76,194,255,.14) 0 1px, transparent 1px 64px);
+  transform: perspective(650px) rotateX(58deg);
+  transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.8), transparent 78%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.8), transparent 78%);
+  animation: floorscroll 16s linear infinite;
+}
+@keyframes floorscroll {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 0 0, 0 64px; }
+}
+.circuitscape svg { width: 100%; height: 100%; display: block; }
+.chip-body { fill: rgba(12,22,44,.8); stroke: rgba(76,194,255,.4); stroke-width: 1.5; }
+.chip-die  { fill: rgba(47,107,255,.16); stroke: rgba(76,194,255,.55); stroke-width: 1; animation: diePulse 4.5s ease-in-out infinite; }
+.chip-pin  { stroke: rgba(76,194,255,.45); stroke-width: 2; }
+.chip-label {
+  fill: #7fd4ff; font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 700; letter-spacing: .08em; opacity: .9;
+}
+.trace { fill: none; stroke: rgba(76,194,255,.22); stroke-width: 1.5; }
+.trace-end { fill: #4cc2ff; animation: ledblink 2.8s ease-in-out infinite; }
+.trace-end.amber { fill: #f2a93b; }
+.pulse { fill: #a8dcff; filter: drop-shadow(0 0 4px #4cc2ff); }
+@keyframes diePulse {
+  0%, 100% { fill: rgba(47,107,255,.14); }
+  50%      { fill: rgba(76,194,255,.32); }
+}
+@keyframes ledblink {
+  0%, 100% { opacity: .2; }
+  50%      { opacity: 1; }
+}
+@media (max-width: 980px) {
+  .circuitscape svg { display: none; }   /* keep small screens clean; floor stays */
+}
+@media (prefers-reduced-motion: reduce) {
+  .circuitscape { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile polish — tighter header, scrollable pill nav, comfortable spacing.
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  /* static (not sticky) on phones: the wrapped nav is 2 rows tall and would
+     eat too much of the screen if it stayed pinned */
+  header.site { padding: .7rem 1rem; gap: .5rem; position: static; }
+  /* wrap instead of hidden horizontal scroll — every link stays reachable */
+  header nav { width: 100%; flex-wrap: wrap; gap: .3rem; }
+  header nav a { white-space: nowrap; font-size: .88rem; padding: .4rem .7rem; }
+  .hero { padding: 1.6rem 0 1rem; }
+  .lede { font-size: 1.1rem; }
+  .cta-row .btn { flex: 1 1 46%; text-align: center; }
+  .card { padding: 1.1rem; }
+  .stat-head { flex-wrap: wrap; gap: .25rem .8rem; }
+  .stat-value { text-align: left; }
+  .build-line { font-size: 1.05rem; flex-wrap: wrap; }
+  table { font-size: .84rem; }
+  th, td { padding: .5rem .5rem; }
+  .opt { padding: .85rem .9rem; }
+  .compare-picker { gap: .4rem; }
+  .chip { padding: .42rem .75rem; font-size: .84rem; }
+}
+
+/* --------------------------------------------------------------------------
+   The Math Lab — the parameters→hardware slider on the models page.
+   -------------------------------------------------------------------------- */
+.mathlab h2 { margin-top: 0; }
+.lab-slider-row { display: flex; align-items: center; gap: 1.2rem; margin: 1rem 0 .6rem; flex-wrap: wrap; }
+.lab-params-label { font-size: 1.15rem; white-space: nowrap; }
+.lab-params-label b { color: var(--accent); font-family: "JetBrains Mono", monospace; font-size: 1.35rem; }
+#lab-params {
+  flex: 1 1 260px; height: 8px; appearance: none; -webkit-appearance: none;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  border-radius: 999px; outline: none; cursor: pointer;
+}
+#lab-params::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #d6f1ff, var(--accent) 60%, var(--accent-2));
+  border: 2px solid #fff2; box-shadow: 0 0 14px rgba(76,194,255,.6); cursor: grab;
+}
+#lab-params::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent); border: 2px solid #fff3;
+  box-shadow: 0 0 14px rgba(76,194,255,.6); cursor: grab;
+}
+.lab-math { color: var(--green-2); background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: 8px; padding: .55rem .8rem; font-size: .92rem; overflow-x: auto; white-space: nowrap; }
+.lab-build { font-size: 1.2rem; font-weight: 700; margin: .8rem 0 .6rem; }
+.lab-build .qty { color: var(--green-2); font-family: "JetBrains Mono", monospace; }
+.lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: .6rem; }
+.lab-cell { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: .6rem .7rem; }
+.lab-cell span { display: block; font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 1.05rem; }
+.lab-cell small { color: var(--muted); }
+.lab-note { margin: .7rem 0 0; font-size: .9rem; }
+
+/* --------------------------------------------------------------------------
+   Light mode. The <head> script sets data-theme from the saved choice or the
+   system preference before first paint; the header toggle switches it live.
+   Dark stays the default identity — light is a clean daylight blueprint.
+   -------------------------------------------------------------------------- */
+.theme-toggle {
+  flex: none; width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--panel); color: var(--text);
+  font-size: 1.05rem; line-height: 1; cursor: pointer;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+.theme-toggle:hover { transform: rotate(40deg) scale(1.08); border-color: var(--accent); }
+
+[data-theme="light"] {
+  --bg: #eef3fa;
+  --bg-2: #e2eaf6;
+  --panel: #ffffff;
+  --panel-2: #f3f7fd;
+  --line: #c4d4ec;
+  --text: #101c30;
+  --muted: #57687f;
+  --green: #5f9600;       /* deeper greens so text stays readable on white */
+  --green-2: #4a8000;
+  --accent: #1273cf;      /* deeper blue for contrast on light surfaces */
+  --accent-2: #2f6bff;
+  --shadow: 0 8px 26px rgba(28, 60, 118, .10);
+}
+[data-theme="light"] body {
+  background:
+    repeating-linear-gradient(0deg,  rgba(47,107,255,.055) 0 1px, transparent 1px 52px),
+    repeating-linear-gradient(90deg, rgba(47,107,255,.055) 0 1px, transparent 1px 52px),
+    radial-gradient(1400px 720px at 85% -12%, rgba(47,107,255,.14), transparent 62%),
+    radial-gradient(1000px 640px at -8% 12%, rgba(76,194,255,.12), transparent 58%),
+    radial-gradient(1000px 640px at 50% 118%, rgba(47,107,255,.10), transparent 62%),
+    linear-gradient(180deg, #dce8f8, var(--bg) 46%);
+  background-attachment: fixed;
+}
+[data-theme="light"] body::before, [data-theme="light"] body::after { opacity: .28; }
+[data-theme="light"] header.site { background: rgba(255,255,255,.82); }
+[data-theme="light"] .hero h1 {
+  background: linear-gradient(120deg, #0b1c38 10%, #1273cf 48%, #4a8000 88%);
+  -webkit-background-clip: text; background-clip: text;
+}
+[data-theme="light"] .hero h1.kinetic .wi {
+  background: linear-gradient(120deg, #0b1c38 10%, #1273cf 48%, #4a8000 88%);
+  -webkit-background-clip: text; background-clip: text;
+}
+[data-theme="light"] .card { background: linear-gradient(180deg, #ffffff, #f6f9fe); }
+[data-theme="light"] .card:hover {
+  border-color: rgba(18,115,207,.45);
+  box-shadow: 0 14px 36px rgba(28,60,118,.14), 0 0 0 1px rgba(18,115,207,.10);
+}
+[data-theme="light"] code { background: #e8f1fb; color: #3f7000; }
+[data-theme="light"] .btn.primary { color: #ffffff; }
+[data-theme="light"] .form-card input { background: #ffffff; }
+[data-theme="light"] tbody tr:hover { background: rgba(18,115,207,.05); }
+[data-theme="light"] .product .tier, [data-theme="light"] .model .params {
+  color: #0e63b4; border-color: rgba(18,115,207,.35); background: rgba(18,115,207,.07);
+}
+[data-theme="light"] .match-note { border-color: rgba(190,140,0,.45); background: rgba(255,200,60,.12); }
+/* circuit background, daylight version */
+[data-theme="light"] .chip-body { fill: rgba(255,255,255,.85); stroke: rgba(18,115,207,.4); }
+[data-theme="light"] .chip-die  { fill: rgba(47,107,255,.14); stroke: rgba(18,115,207,.5); }
+[data-theme="light"] .chip-label { fill: #0e63b4; }
+[data-theme="light"] .trace { stroke: rgba(18,115,207,.28); }
+[data-theme="light"] .trace-end { fill: #1273cf; }
+[data-theme="light"] .pulse { fill: #1273cf; filter: drop-shadow(0 0 3px rgba(18,115,207,.8)); }
+[data-theme="light"] .circuitscape .floor {
+  background:
+    repeating-linear-gradient(90deg, rgba(18,115,207,.14) 0 1px, transparent 1px 90px),
+    repeating-linear-gradient(0deg,  rgba(18,115,207,.14) 0 1px, transparent 1px 64px);
+}
+[data-theme="light"] .lab-math { color: #3f7000; }
+[data-theme="light"] .brand-mark { filter: none; }
+
+/* --------------------------------------------------------------------------
+   Hardware page — product portraits, the price ladder, aisle headers.
+   -------------------------------------------------------------------------- */
+.product .art { width: 100%; max-width: 300px; height: auto; display: block; margin: .8rem 0 .4rem; }
+
+/* Real product photos (freely licensed, credited in the caption) */
+.product-photo { margin: .8rem 0 .6rem; }
+.product-photo img {
+  display: block; width: 100%; max-height: 260px; object-fit: contain;
+  border-radius: 12px; background: var(--bg-2);
+  border: 1px solid var(--line); padding: .6rem;
+  box-sizing: border-box;
+}
+.product-photo.tall img { max-height: 440px; }
+.product-photo figcaption { margin-top: .4rem; font-size: .78rem; color: var(--muted); line-height: 1.45; }
+.product-photo .credit { display: block; opacity: .75; }
+.product-photo .credit a { color: inherit; text-decoration: underline; }
+[data-theme="light"] .product-photo img { background: #fff; }
+.art .pcb      { fill: var(--bg-2); stroke: var(--line); stroke-width: 2; }
+.art .bracket  { fill: var(--panel-2); stroke: var(--line); stroke-width: 1.5; }
+.art .fanring  { fill: none; stroke: var(--accent); stroke-width: 2; opacity: .7; }
+.art .blades line { stroke: var(--accent); stroke-width: 3; stroke-linecap: round; }
+.art .hub      { fill: var(--accent); }
+.art .fan      { transform-box: fill-box; transform-origin: center; }
+.product:hover .art .fan { animation: fanspin 1s linear infinite; }
+@keyframes fanspin { to { transform: rotate(360deg); } }
+.art .glowbar  { fill: var(--green); opacity: .55; }
+.art .vents line { stroke: var(--line); stroke-width: 2.5; stroke-linecap: round; }
+.art .die      { fill: rgba(47,107,255,.22); stroke: var(--accent); stroke-width: 2; animation: diePulse 4s ease-in-out infinite; }
+.art .hbm      { fill: var(--panel-2); stroke: var(--line); stroke-width: 1.5; }
+.art .pins line { stroke: var(--line); stroke-width: 2; }
+.art .chassis  { fill: var(--bg-2); stroke: var(--line); stroke-width: 2; }
+.art .die8     { fill: rgba(76,194,255,.28); stroke: var(--accent); stroke-width: 1.5; animation: diePulse 2.6s ease-in-out infinite; }
+.art .unit     { fill: var(--panel-2); stroke: var(--line); stroke-width: 1; }
+.art .led      { fill: var(--accent); animation: ledblink 2.2s ease-in-out infinite; }
+.art .amberled { fill: #f2a93b; }
+.art text      { fill: var(--muted); font: 700 9px "JetBrains Mono", ui-monospace, monospace; letter-spacing: .12em; }
+.art .dielabel { fill: var(--accent); font-size: 12px; }
+.art .racklabel{ fill: var(--muted); font-size: 10px; }
+
+/* Aisle headers */
+.aisle { display: flex; align-items: baseline; gap: .8rem; margin: 2rem 0 1rem; font-size: 1.25rem; }
+.aisle .aisle-num {
+  font: 700 .72rem "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--green-2); border: 1px solid var(--line); border-radius: 999px;
+  padding: .25rem .7rem; background: var(--panel); white-space: nowrap;
+}
+.aisle::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
+
+/* Price ladder */
+.ladder-card h2 { margin-top: 0; }
+.ladder-scroll { overflow-x: auto; padding-bottom: .3rem; }
+.ladder { position: relative; min-width: 560px; height: 130px; margin-top: .6rem; }
+.lad-line {
+  position: absolute; left: 0; right: 0; top: 50%; height: 4px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--green), var(--accent), var(--accent-2));
+  opacity: .8;
+}
+.lad-tick { position: absolute; top: 50%; transform: translate(-50%, 10px); color: var(--muted); font: 600 .68rem "JetBrains Mono", monospace; text-align: center; }
+.lad-tick i { display: block; width: 1px; height: 9px; margin: -12px auto 3px; background: var(--line); }
+.lad-dot {
+  position: absolute; top: 50%; width: 13px; height: 13px; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 35%, #d6f1ff, var(--accent) 65%);
+  box-shadow: 0 0 10px rgba(76,194,255,.65); border: 2px solid rgba(255,255,255,.25);
+}
+.lad-label { position: absolute; transform: translateX(-50%); text-align: center; line-height: 1.25; white-space: nowrap; }
+.lad-label.above { bottom: calc(50% + 16px); }
+.lad-label.below { top: calc(50% + 26px); }
+.lad-label b { display: block; font: 700 .74rem "Space Grotesk", sans-serif; }
+.lad-label span { font: 600 .68rem "JetBrains Mono", monospace; color: var(--muted); }
+[data-theme="light"] .lad-dot { background: radial-gradient(circle at 35% 35%, #bfe3ff, #1273cf 65%); box-shadow: 0 0 8px rgba(18,115,207,.5); border-color: rgba(255,255,255,.7); }
+
+@media (prefers-reduced-motion: reduce) {
+  .product:hover .art .fan, .art .die, .art .die8, .art .led { animation: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Hardware page interactions — run-check widget, ladder navigation, flash.
+   -------------------------------------------------------------------------- */
+.runcheck { border-top: 1px dashed var(--line); margin-top: .9rem; padding-top: .8rem; }
+.runcheck-q { margin: 0 0 .45rem; font-weight: 700; font-family: "Space Grotesk", sans-serif; }
+.runcheck-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .55rem; }
+.runcheck-chips .chip { font-size: .8rem; padding: .35rem .7rem; }
+.runcheck-out { font-size: .92rem; line-height: 1.5; min-height: 1.4em; }
+.runcheck-out.pop { animation: fadeDown .35s ease both; }
+.lad-dot[data-target] { cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.lad-dot[data-target]:hover, .lad-dot.lit {
+  transform: translate(-50%, -50%) scale(1.5);
+  box-shadow: 0 0 16px rgba(76,194,255,.95);
+}
+.card.flash { animation: cardflash 1.6s ease; }
+@keyframes cardflash {
+  0%, 60% { border-color: var(--green-2); box-shadow: 0 0 0 2px rgba(155,230,0,.5), 0 0 34px rgba(155,230,0,.25); }
+  100% { border-color: var(--line); }
+}
+[data-theme="light"] .lad-dot[data-target]:hover, [data-theme="light"] .lad-dot.lit { box-shadow: 0 0 14px rgba(18,115,207,.8); }
+
+/* --------------------------------------------------------------------------
+   Burn counter, receipt confirmation, and the POWER SURGE easter egg.
+   -------------------------------------------------------------------------- */
+.burn { font-size: .88rem; color: var(--muted); background: var(--bg-2); border: 1px dashed var(--line);
+  border-radius: 10px; padding: .55rem .8rem; margin: .6rem 0; }
+.burn b { color: var(--green-2); font-family: "JetBrains Mono", monospace; font-weight: 700; }
+
+/* Receipt — a thermal-printer slip, paper-white even in dark mode */
+.receipt-wrap { display: flex; justify-content: center; margin: .5rem 0 1.4rem; }
+.receipt {
+  width: min(420px, 100%); background: #fdfcf7; color: #1c2430;
+  padding: 1.6rem 1.4rem 1.2rem; transform: rotate(-.6deg);
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .82rem; line-height: 1.7;
+  box-shadow: 0 16px 44px rgba(0,0,0,.45);
+  -webkit-mask-image: linear-gradient(#000 0 0),
+    radial-gradient(circle at 8px 0, transparent 6px, #000 6.5px);
+  mask: radial-gradient(circle at 8px 100%, transparent 6px, #000 6.5px) bottom / 16px 100%;
+}
+[data-theme="light"] .receipt { box-shadow: 0 16px 40px rgba(28,60,118,.25); }
+.receipt .r-store { font-weight: 700; font-size: 1rem; text-align: center; margin: 0; }
+.receipt .r-sub { text-align: center; color: #7a8494; font-size: .68rem; letter-spacing: .14em; margin: .15rem 0; }
+.receipt .r-title { text-align: center; font-weight: 700; letter-spacing: .2em; margin: .6rem 0 .1rem; }
+.receipt .r-num { text-align: center; font-size: 1.5rem; margin: .1rem 0 .5rem; }
+.receipt .r-num strong { color: #2e7d00; }
+.receipt .r-tear { border-top: 2px dashed #c9cdd6; margin: .7rem 0; }
+.receipt .r-line { display: flex; justify-content: space-between; gap: 1rem; }
+.receipt .r-line span:first-child { color: #7a8494; flex: none; }
+.receipt .r-line span:last-child { text-align: right; overflow-wrap: anywhere; }
+.receipt .r-thanks { text-align: center; font-size: .72rem; letter-spacing: .1em; margin: .6rem 0; }
+.receipt .r-barcode {
+  height: 44px; margin: .6rem auto .3rem; width: 82%;
+  background: repeating-linear-gradient(90deg,
+    #1c2430 0 2px, transparent 2px 4px, #1c2430 4px 7px, transparent 7px 9px,
+    #1c2430 9px 10px, transparent 10px 14px, #1c2430 14px 16px, transparent 16px 17px);
+}
+
+/* POWER SURGE — type "gpu" */
+body.surge .art .fan { animation: fanspin .22s linear infinite !important; }
+body.surge .led, body.surge .trace-end { animation-duration: .25s !important; }
+body.surge .art .die, body.surge .art .die8, body.surge .chip-die { animation-duration: .4s !important; }
+body.surge .brand-mark { animation: sparkle .3s ease-in-out infinite !important; }
+body.surge main { animation: jolt .5s ease 1; }
+@keyframes jolt {
+  0%, 100% { transform: none; }
+  25% { transform: translate(2px, -2px); }
+  50% { transform: translate(-3px, 1px); }
+  75% { transform: translate(1px, 2px); }
+}
+.surge-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+  z-index: 99; max-width: 90vw; text-align: center;
+  background: linear-gradient(120deg, var(--green), #5a9000); color: #06210a;
+  font-weight: 700; padding: .8rem 1.2rem; border-radius: 12px;
+  box-shadow: 0 10px 34px rgba(118,185,0,.45);
+  animation: toastIn .35s cubic-bezier(.2,.7,.3,1.4) both;
+}
+@keyframes toastIn { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (prefers-reduced-motion: reduce) {
+  body.surge main { animation: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Landing-page choreography: kinetic hero type, factoid marquee, cursor glow.
+   -------------------------------------------------------------------------- */
+/* iOS Safari drops background-clip:text on animated/filtered elements, so the
+   kinetic title splits the jobs: the h1 and outer .w spans never paint the
+   gradient (they only animate), and the inner .wi spans that DO paint it are
+   never animated. */
+.hero h1.kinetic {
+  background: none; animation: none;
+  color: var(--text); -webkit-text-fill-color: currentColor;
+}
+.hero h1.kinetic .w {
+  display: inline-block; opacity: 0;
+  transform: translateY(34px) rotate(2deg);
+  animation: wordIn .75s cubic-bezier(.2, .7, .2, 1) forwards;
+}
+.hero h1.kinetic .wi {
+  display: inline-block;
+  background: linear-gradient(120deg, #fff 10%, var(--accent) 45%, var(--green-2) 85%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+@keyframes wordIn {
+  to { opacity: 1; transform: none; }
+}
+.rise { opacity: 0; animation: riseIn .7s cubic-bezier(.2, .7, .3, 1) forwards; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* Marquee ticker — the store's lessons on a moving shelf */
+.ticker {
+  overflow: hidden; margin: .4rem 0 1.6rem; padding: .6rem 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.ticker-track {
+  display: inline-flex; align-items: center; gap: 2.2rem;
+  white-space: nowrap; width: max-content;
+  animation: tickerScroll 46s linear infinite;
+}
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.tk { font: 600 .84rem "JetBrains Mono", ui-monospace, monospace; color: var(--muted); letter-spacing: .02em; }
+.tk-sep { color: var(--green); font-size: .8rem; }
+@keyframes tickerScroll { to { transform: translateX(-50%); } }
+
+/* Cursor spotlight (fine pointers only; created by app.js) */
+#cursor-glow {
+  position: fixed; left: 0; top: 0; width: 560px; height: 560px;
+  border-radius: 50%; pointer-events: none; z-index: 1; opacity: 0;
+  background: radial-gradient(circle, rgba(76,194,255,.13), transparent 62%);
+  mix-blend-mode: screen; transition: opacity .4s ease;
+  will-change: transform;
+}
+#cursor-glow.on { opacity: 1; }
+[data-theme="light"] #cursor-glow {
+  background: radial-gradient(circle, rgba(47,107,255,.09), transparent 62%);
+  mix-blend-mode: normal;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero h1.kinetic .w, .rise { opacity: 1; transform: none; filter: none; animation: none; }
+  .ticker-track { animation: none; }
+  #cursor-glow { display: none; }
+}
+
+/* Header button cluster (sound + theme) */
+.header-btns { display: flex; gap: .45rem; flex: none; }
+
+/* --------------------------------------------------------------------------
+   Accessibility, honeypot, print.
+   -------------------------------------------------------------------------- */
+/* Keyboard focus — visible, on-brand */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.btn:focus-visible, .chip:focus-visible, .opt:focus-visible { outline-offset: 3px; }
+
+/* Honeypot field — invisible to humans, irresistible to bots */
+.hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+
+/* Print: the receipt prints like a receipt; everything else stays home */
+@media print {
+  header.site, footer.site, .cta-row, .circuitscape, #cursor-glow, .ticker, .page-head p { display: none !important; }
+  body { background: #fff !important; }
+  body::before, body::after { display: none !important; }
+  .receipt { transform: none; box-shadow: none; border: 1px dashed #999; }
+  .page-head h1 { color: #000; }
+}
+
+/* --------------------------------------------------------------------------
+   The 3D showroom — a CSS-3D turntable of the product portraits.
+   -------------------------------------------------------------------------- */
+.showcase-card { overflow: hidden; }
+.showcase-card h2 { margin-top: 0; }
+.showcase {
+  height: 320px; margin-top: .4rem;
+  perspective: 1150px; touch-action: pan-y; cursor: grab; user-select: none;
+}
+.showcase:active { cursor: grabbing; }
+.carousel {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d; will-change: transform;
+}
+.car-item {
+  position: absolute; left: 50%; top: 50%;
+  width: 200px; margin: -120px 0 0 -100px;
+  display: flex; flex-direction: column; align-items: center; gap: .15rem;
+  padding: .8rem .7rem .7rem;
+  background: linear-gradient(180deg, var(--panel), var(--bg-2));
+  border: 1px solid var(--line); border-radius: 14px;
+  color: var(--text); font: inherit; cursor: pointer;
+  backface-visibility: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  transition: border-color .2s ease;
+}
+[data-theme="light"] .car-item { background: linear-gradient(180deg, #fff, #f4f8fd); box-shadow: 0 10px 26px rgba(28,60,118,.14); }
+.car-item:hover { border-color: var(--accent); }
+.car-item .art { width: 100%; max-width: 176px; margin: 0; pointer-events: none; }
+.car-name { font: 700 .82rem "Space Grotesk", sans-serif; }
+.car-price { font: 600 .74rem "JetBrains Mono", monospace; color: var(--green-2); }
+@media (max-width: 640px) {
+  .showcase { height: 260px; }
+  .car-item { width: 140px; margin: -95px 0 0 -70px; padding: .5rem .4rem .45rem; }
+  .car-name { font-size: .7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .showcase { display: none; } /* the aisles below carry all the content */
+}
