@@ -11,6 +11,7 @@
   --accent: #4cc2ff;     /* electric blue — the store's dominant hue */
   --accent-2: #2f6bff;   /* deep blue */
   --danger: #ff5d5d;
+  --brass: #d9b36a;      /* museum brass — placards, curator's notes */
   --radius: 14px;
   --shadow: 0 8px 30px rgba(0,0,0,.35);
 }
@@ -48,6 +49,14 @@ h1, h2, h3, h4, .brand-name {
 a { color: var(--accent); text-decoration: none; }
 code { background: var(--panel-2); padding: .15em .45em; border-radius: 6px; color: var(--green-2); font-size: .92em; }
 
+/* Skip link — invisible until a keyboard user tabs onto it */
+.skip {
+  position: absolute; left: 1rem; top: -100px; z-index: 100;
+  background: var(--green); color: #06210a; font-weight: 700;
+  padding: .6rem 1rem; border-radius: 10px; transition: top .15s ease;
+}
+.skip:focus { top: .6rem; }
+
 /* Header / footer */
 header.site {
   display: flex; align-items: center; justify-content: space-between;
@@ -66,6 +75,9 @@ header nav a {
 }
 header nav a:hover { color: var(--text); background: var(--panel); }
 header nav a.active { color: var(--green-2); border-color: var(--line); background: var(--panel); }
+/* "Get a quote" — the one action a shopper is here for stays one tap away */
+header nav a.nav-quote { color: var(--green-2); border-color: rgba(118,185,0,.5); font-weight: 700; }
+header nav a.nav-quote:hover, header nav a.nav-quote.active { background: rgba(118,185,0,.12); }
 
 main { max-width: 1120px; margin: 0 auto; padding: clamp(1.5rem, 4vw, 3rem); }
 
@@ -119,6 +131,141 @@ footer .fine { font-size: .85rem; }
 
 .feature h3 { margin: .2rem 0 .5rem; color: var(--green-2); }
 .explainer h2 { margin-top: 0; }
+
+/* --------------------------------------------------------------------------
+   The gallery layer — Museum-of-Compute accents on the dark-tech identity.
+   Fraunces (serif) is reserved for the museum voice: eyebrows, wall labels,
+   and the curator's notes. Everything technical stays Grotesk/Mono.
+   -------------------------------------------------------------------------- */
+.eyebrow {
+  font: 600 .72rem "Fraunces", Georgia, serif;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: var(--brass); margin: 0 0 .35rem;
+}
+.hero .eyebrow { margin-bottom: .6rem; }
+
+/* Exhibit placard — the small wall label above each product's name */
+.placard-meta {
+  font: 600 .68rem "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--brass); opacity: .92;
+  border-top: 1px solid var(--line);
+  padding-top: .6rem; margin: .7rem 0 0;
+}
+
+/* The curator's note — one italic serif line per exhibit */
+.curator {
+  font: italic 500 .98rem/1.55 "Fraunces", Georgia, serif;
+  color: var(--muted);
+  border-left: 2px solid var(--brass);
+  padding: .1rem 0 .1rem .8rem; margin: .6rem 0 .2rem;
+}
+.curator span { font-size: .78rem; opacity: .75; white-space: nowrap; }
+
+/* "Picture it" — the one-line analogy inside every explanation */
+.explain p.picture, .dict p.picture { font-style: italic; }
+.explain p.picture strong, .dict p.picture strong { color: var(--brass); font-style: normal; }
+
+/* Homepage starter — the whole store in five plain sentences */
+.starter h2 { margin: .1rem 0 .6rem; }
+.starter-steps { margin: 0 0 1.1rem; padding-left: 1.4rem; display: grid; gap: .55rem; max-width: 72ch; }
+.starter-steps li { color: var(--muted); }
+.starter-steps li::marker { color: var(--green-2); font-weight: 700; font-family: "JetBrains Mono", monospace; }
+.starter-steps strong { color: var(--text); }
+
+/* Dictionary page */
+.dict h3 { margin: 0 0 .5rem; color: var(--accent); }
+.dict p { color: var(--muted); margin: .4rem 0; }
+.dict p.when { color: var(--text); font-size: .92rem; }
+.dict p.picture { font-size: .95rem; }
+
+/* Three doors — "which tool fits you" on the homepage */
+.doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: .9rem; margin-bottom: 1.2rem; }
+.door {
+  display: flex; flex-direction: column; gap: .2rem;
+  padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--panel); color: var(--text);
+  transition: transform .2s ease, border-color .2s ease;
+}
+.door:hover { transform: translateY(-3px); border-color: var(--accent); }
+.door .door-q { font: 600 .72rem "Fraunces", Georgia, serif; letter-spacing: .18em; text-transform: uppercase; color: var(--brass); }
+.door b { font: 700 1.1rem "Space Grotesk", sans-serif; }
+.door .door-how { color: var(--muted); font-size: .9rem; }
+
+/* Footer store map — Learn / Choose / Buy */
+.foot-map { display: flex; gap: 3rem; flex-wrap: wrap; margin: 1rem 0 1.2rem; }
+.foot-map div { display: flex; flex-direction: column; gap: .3rem; }
+.foot-map .foot-head { font: 600 .68rem "Fraunces", Georgia, serif; letter-spacing: .22em; text-transform: uppercase; color: var(--brass); margin-bottom: .15rem; }
+.foot-map a { color: var(--muted); font-size: .9rem; }
+.foot-map a:hover { color: var(--text); }
+
+/* Quote-page build picker */
+.quote-picker { margin-bottom: 1.4rem; }
+.quote-picker h3 { margin: 0 0 .3rem; }
+.pick-card {
+  display: flex; flex-direction: column; gap: .25rem;
+  padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--bg-2); color: var(--text);
+  transition: transform .2s ease, border-color .2s ease;
+}
+.pick-card:hover { transform: translateY(-2px); border-color: var(--green-2); }
+.pick-card b { font-family: "Space Grotesk", sans-serif; }
+.pick-card span { color: var(--muted); font-size: .88rem; }
+.pick-card .pick-price { color: var(--green-2); font: 700 .95rem "JetBrains Mono", monospace; }
+
+/* Cross-links, reassurance, and the "is this for me?" line */
+.card-links { margin: .7rem 0 0; font-size: .9rem; }
+.run-link { white-space: nowrap; }
+.next-steps { text-align: center; color: var(--muted); max-width: 52ch; margin: 0 auto 1rem; }
+.form-card .fine { color: var(--muted); font-size: .82rem; margin: -.3rem 0 0; }
+.bestfor { margin: .5rem 0 0; color: var(--text); }
+.bestfor strong { color: var(--green-2); }
+.homes-hint { color: var(--muted); font-weight: 500; font-size: .78em; margin-left: .3em; }
+
+/* Aisle jump-chips under the Hardware page head */
+.aisle-chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .9rem; }
+.aisle-chip { text-decoration: none; }
+html { scroll-behavior: smooth; }
+.aisle, .product, .model { scroll-margin-top: 110px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Wizard step counter */
+.step-count { font: 600 .7rem "JetBrains Mono", monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--brass); margin: 0 0 .2rem; }
+
+/* Homepage collection strip — six exhibit tiles linking into the aisles */
+.collection .coll-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;
+}
+.collection .coll-head h2 { margin: .15rem 0 0; }
+.coll-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: .7rem; }
+.coll-tile {
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  padding: .85rem .55rem .7rem; text-align: center;
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px;
+  color: var(--text); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.coll-tile:hover {
+  transform: translateY(-3px); border-color: var(--accent);
+  box-shadow: 0 10px 26px rgba(0,0,0,.3);
+}
+.coll-tile .art { width: 100%; max-width: 150px; margin: 0; pointer-events: none; }
+.coll-tile b { font: 700 .8rem "Space Grotesk", sans-serif; line-height: 1.2; }
+.coll-tile .coll-ex {
+  font: 600 .58rem "JetBrains Mono", monospace;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--brass);
+}
+.coll-tile .coll-price { font: 600 .74rem "JetBrains Mono", monospace; color: var(--green-2); }
+[data-theme="light"] .coll-tile { background: #fff; }
+[data-theme="light"] .coll-tile:hover { box-shadow: 0 10px 22px rgba(28,60,118,.14); }
+@media (max-width: 960px) {
+  .coll-strip {
+    display: flex; overflow-x: auto; padding-bottom: .4rem;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .coll-strip::-webkit-scrollbar { display: none; }
+  .coll-tile { flex: 0 0 148px; }
+}
 
 /* Product / model cards */
 .product .tier, .model .params {
@@ -185,9 +332,6 @@ th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: up
 td.mono, .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
 td.empty { text-align: center; color: var(--muted); padding: 2rem; }
 
-@media (max-width: 640px) {
-  header.site { flex-direction: column; align-items: flex-start; }
-}
 
 /* --------------------------------------------------------------------------
    Motion & animation — tasteful, GPU-cheap, and fully disabled for users
@@ -413,13 +557,32 @@ body::after {
 /* --------------------------------------------------------------------------
    Mobile polish — tighter header, scrollable pill nav, comfortable spacing.
    -------------------------------------------------------------------------- */
+@media (max-width: 1120px) {
+  /* Two clean rows instead of an awkward wrap that orphaned one nav pill. */
+  header.site { flex-wrap: wrap; gap: .4rem .6rem; padding-top: .7rem; padding-bottom: .6rem; }
+  .brand { order: 0; }
+  .header-btns { order: 1; margin-left: auto; }
+  header nav {
+    order: 2; width: 100%; flex-wrap: nowrap; gap: .3rem;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, #000 92%, transparent);
+    padding-right: 1.4rem; /* room so the last link isn't lost in the fade */
+  }
+  header nav::-webkit-scrollbar { display: none; }
+  header nav a { white-space: nowrap; }
+}
+
 @media (max-width: 640px) {
-  /* static (not sticky) on phones: the wrapped nav is 2 rows tall and would
-     eat too much of the screen if it stayed pinned */
-  header.site { padding: .7rem 1rem; gap: .5rem; position: static; }
-  /* wrap instead of hidden horizontal scroll — every link stays reachable */
-  header nav { width: 100%; flex-wrap: wrap; gap: .3rem; }
-  header nav a { white-space: nowrap; font-size: .88rem; padding: .4rem .7rem; }
+  header.site { padding: .55rem 1rem .5rem; gap: .35rem .5rem; }
+  header nav a { font-size: .88rem; padding: .4rem .7rem; }
+  .theme-toggle { width: 34px; height: 34px; }
+  /* Requests table stacks into cards on phones */
+  .table-card thead { display: none; }
+  .table-card tr { display: block; border: 1px solid var(--line); border-radius: 10px; padding: .5rem .7rem; margin-bottom: .7rem; background: var(--bg-2); }
+  .table-card td { display: flex; justify-content: space-between; gap: 1rem; border: none; padding: .25rem 0; text-align: right; }
+  .table-card td::before { content: attr(data-l); color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; text-align: left; flex: none; }
+  .table-card td.empty { display: block; text-align: center; }
   .hero { padding: 1.6rem 0 1rem; }
   .lede { font-size: 1.1rem; }
   .cta-row .btn { flex: 1 1 46%; text-align: center; }
@@ -480,6 +643,7 @@ body::after {
 .theme-toggle:hover { transform: rotate(40deg) scale(1.08); border-color: var(--accent); }
 
 [data-theme="light"] {
+  --brass: #8a6d2f;      /* deeper brass so the museum voice stays readable */
   --bg: #eef3fa;
   --bg-2: #e2eaf6;
   --panel: #ffffff;
@@ -584,9 +748,9 @@ body::after {
 /* Aisle headers */
 .aisle { display: flex; align-items: baseline; gap: .8rem; margin: 2rem 0 1rem; font-size: 1.25rem; }
 .aisle .aisle-num {
-  font: 700 .72rem "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--green-2); border: 1px solid var(--line); border-radius: 999px;
-  padding: .25rem .7rem; background: var(--panel); white-space: nowrap;
+  font: 600 .74rem "Fraunces", Georgia, serif; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--brass); border: 1px solid var(--line); border-radius: 999px;
+  padding: .25rem .8rem; background: var(--panel); white-space: nowrap;
 }
 .aisle::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
 
@@ -767,6 +931,21 @@ body.surge main { animation: jolt .5s ease 1; }
 /* Header button cluster (sound + theme) */
 .header-btns { display: flex; gap: .45rem; flex: none; }
 
+/* "Explain every number" — one button opens all the teaching on the page */
+.explain-toggle { margin-top: .9rem; font-size: .85rem; padding: .45rem .9rem; }
+
+/* Back to top — appears after ~1.5 screens of scrolling */
+#to-top {
+  position: fixed; right: 18px; bottom: 18px; z-index: 40;
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--panel); color: var(--text);
+  font-size: 1.25rem; line-height: 1; cursor: pointer; box-shadow: var(--shadow);
+  opacity: 0; transform: translateY(14px); pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease, border-color .2s ease;
+}
+#to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+#to-top:hover { border-color: var(--accent); }
+
 /* --------------------------------------------------------------------------
    Accessibility, honeypot, print.
    -------------------------------------------------------------------------- */
@@ -779,7 +958,7 @@ body.surge main { animation: jolt .5s ease 1; }
 
 /* Print: the receipt prints like a receipt; everything else stays home */
 @media print {
-  header.site, footer.site, .cta-row, .circuitscape, #cursor-glow, .ticker, .page-head p { display: none !important; }
+  header.site, footer.site, .cta-row, .circuitscape, #cursor-glow, .ticker, .page-head p, #to-top, .explain-toggle, .skip { display: none !important; }
   body { background: #fff !important; }
   body::before, body::after { display: none !important; }
   .receipt { transform: none; box-shadow: none; border: 1px dashed #999; }

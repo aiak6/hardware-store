@@ -31,30 +31,65 @@
     setIcon();
   }
 
+  // ---- 0.5 Mobile nav: keep the current page's pill in view -------------------
+  (function () {
+    var nav = document.querySelector("header nav");
+    var act = nav && nav.querySelector("a.active");
+    if (nav && act && nav.scrollWidth > nav.clientWidth + 4) {
+      nav.scrollLeft = Math.max(0, act.offsetLeft - nav.offsetLeft - 16);
+    }
+  })();
+
   // ---- 1. Scroll reveal -----------------------------------------------------
+  // Above-the-fold content must NEVER wait for the observer: the initial IO
+  // delivery can lag (or not come at all), which left whole pages looking
+  // empty until the first scroll. Anything already on screen is revealed
+  // immediately; the observer only choreographs what's below the fold.
   if (!reduceMotion && "IntersectionObserver" in window) {
     var targets = document.querySelectorAll(".card, .page-head, .hero, .quote-summary");
-    targets.forEach(function (el, i) {
-      el.classList.add("reveal");
-      el.style.transitionDelay = Math.min((i % 5) * 70, 280) + "ms";
-    });
+    var reveal = function (el) {
+      if (el.classList.contains("in")) return;
+      el.classList.add("in");
+      countUpWithin(el);
+    };
+    var onScreen = function (el) {
+      var r = el.getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    };
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
-          e.target.classList.add("in");
-          countUpWithin(e.target);
+          reveal(e.target);
           io.unobserve(e.target);
         }
       });
     }, { threshold: 0.08 });
-    targets.forEach(function (el) { io.observe(el); });
+    var stagger = 0;
+    targets.forEach(function (el) {
+      if (onScreen(el)) {
+        // visible right now: quick stagger in, no waiting on the observer
+        el.classList.add("reveal");
+        el.style.transitionDelay = Math.min(stagger++ * 70, 280) + "ms";
+        requestAnimationFrame(function () { requestAnimationFrame(function () { reveal(el); }); });
+      } else {
+        el.classList.add("reveal");
+        io.observe(el);
+      }
+    });
+    // Belt and braces: if the observer never delivers, nothing stays hidden.
+    setTimeout(function () {
+      targets.forEach(function (el) { if (onScreen(el)) reveal(el); });
+    }, 900);
   }
 
   // ---- 2. Count-up numbers ---------------------------------------------------
-  // Animates the numeric part of stat values like "$25,500", "282 GB", "~1.5 homes".
+  // Only the receipt number keeps the theatrical count-up. Spec figures
+  // (.stat-value) always render true from the first frame — a store whose
+  // whole brand is "numbers you can trust" shouldn't flash $1,640 on a
+  // $1,999 card, even for half a second.
   function countUpWithin(root) {
     if (reduceMotion) return;
-    root.querySelectorAll(".stat-value, .reqnum strong").forEach(function (el) {
+    root.querySelectorAll(".reqnum strong").forEach(function (el) {
       if (el.dataset.counted) return;
       el.dataset.counted = "1";
       var text = el.textContent;
@@ -169,13 +204,14 @@
     document.body.appendChild(scape);
   }
 
-  // ---- Interface sounds (synthesized, whisper-quiet, mutable) ---------------------
-  // No audio files: tiny WebAudio blips, only ever on user gestures. The 🔊 button
-  // in the header mutes everything; the choice is remembered.
+  // ---- Interface sounds (synthesized, whisper-quiet, opt-in) ---------------------
+  // No audio files: tiny WebAudio blips, only ever on user gestures. Sounds are
+  // OFF until the visitor turns them on with the header button — unexpected
+  // audio is nobody's favourite surprise. The choice is remembered.
   var sound = (function () {
     var ctx = null;
-    var enabled = true;
-    try { enabled = localStorage.getItem("sound") !== "off"; } catch (e) {}
+    var enabled = false;
+    try { enabled = localStorage.getItem("sound") === "on"; } catch (e) {}
     function ac() {
       if (!ctx) { var AC = window.AudioContext || window.webkitAudioContext; ctx = AC ? new AC() : null; }
       if (ctx && ctx.state === "suspended") ctx.resume();
@@ -263,6 +299,64 @@
     }, 1000);
   }
 
+  // ---- Open/close every explanation at once ---------------------------------------
+  // Stat-heavy pages have dozens of "What does this mean?" toggles. One button
+  // opens (or closes) them all, so a curious reader doesn't have to click 40 times.
+  (function () {
+    var explains = document.querySelectorAll("details.explain");
+    var head = document.querySelector(".page-head");
+    if (explains.length < 6 || !head) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn explain-toggle";
+    var setLabel = function (open) {
+      btn.textContent = open ? "Close all explanations" : "ⓘ Explain every number";
+    };
+    setLabel(false);
+    btn.addEventListener("click", function () {
+      var open = ![].every.call(explains, function (d) { return d.open; });
+      explains.forEach(function (d) { d.open = open; });
+      setLabel(open);
+    });
+    head.appendChild(btn);
+  })();
+
+  // ---- Back to top ------------------------------------------------------------
+  // The aisles run long. After two screens of scrolling, offer the way back.
+  (function () {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "to-top";
+    btn.setAttribute("aria-label", "Back to top");
+    btn.innerHTML = "↑";
+    btn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    });
+    document.body.appendChild(btn);
+    var shown = false, waiting = false;
+    var update = function () {
+      waiting = false;
+      var want = window.scrollY > window.innerHeight * 1.5;
+      if (want !== shown) { shown = want; btn.classList.toggle("show", want); }
+    };
+    window.addEventListener("scroll", function () {
+      if (!waiting) { waiting = true; requestAnimationFrame(update); }
+    }, { passive: true });
+  })();
+
+  // ---- Quote form: instant feedback on submit ----------------------------------
+  // The button acknowledges the click and blocks accidental double submissions.
+  (function () {
+    var form = document.querySelector(".form-card form");
+    if (!form) return;
+    form.addEventListener("submit", function () {
+      var btn = form.querySelector('button[type="submit"]');
+      if (!btn) return;
+      btn.disabled = true;
+      btn.textContent = "Sending your request…";
+    });
+  })();
+
   // ---- Easter egg: type "gpu" anywhere → POWER SURGE ------------------------------
   (function () {
     var buf = "";
@@ -292,8 +386,16 @@
     var picker = compareRoot.querySelector(".compare-picker");
     var barsEl = compareRoot.querySelector(".compare-bars");
     var selected = {};
-    // sensible default: the desktop card, the workstation card, one datacenter GPU
-    ["rtx-5090", "rtx-pro-6000", "h200-141"].forEach(function (id) { selected[id] = true; });
+    // ?with=<id,id> (e.g. the "Compare this" link on a product card) preselects
+    // those products plus the default trio; else just the sensible default.
+    var withIds = [];
+    try {
+      var q = new URLSearchParams(location.search).get("with");
+      if (q) withIds = q.split(",").filter(function (id) {
+        return D.products.some(function (p) { return p.id === id; });
+      });
+    } catch (e) {}
+    ["rtx-5090", "rtx-pro-6000", "h200-141"].concat(withIds).forEach(function (id) { selected[id] = true; });
 
     D.products.forEach(function (p) {
       var chip = document.createElement("button");
@@ -414,18 +516,27 @@
         chip.type = "button";
         chip.className = "chip";
         chip.textContent = m.name;
+        chip.setAttribute("aria-pressed", "false");
         chip.onclick = function () {
-          chipsEl.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("on"); });
+          chipsEl.querySelectorAll(".chip").forEach(function (c) {
+            c.classList.remove("on");
+            c.setAttribute("aria-pressed", "false");
+          });
           chip.classList.add("on");
+          chip.setAttribute("aria-pressed", "true");
           var need = Math.round(m.params * 1.2);
           var qty = Math.ceil(need / product.gpuMemoryGB);
+          // Every verdict ends in a door, not a dead end.
+          var buildLink = m.id
+            ? ' <a class="run-link" href="/models#' + m.id + '">See the honest build →</a>'
+            : "";
           var html;
           if (qty === 1) {
             html = "✅ <strong>Yes — one unit runs it.</strong> " + m.name + " needs " + fm(need) +
-              " GB; this unit pools " + fm(product.gpuMemoryGB) + " GB.";
+              " GB; this unit pools " + fm(product.gpuMemoryGB) + " GB." + buildLink;
           } else if (qty > 32) {
             html = "🚫 <strong>Not with this.</strong> You'd need " + fm(qty) +
-              " of them for " + fm(need) + " GB — nobody sane builds that. Step up an aisle.";
+              " of them for " + fm(need) + " GB — nobody sane builds that. Step up an aisle." + buildLink;
           } else {
             html = "🔗 <strong>" + qty + " × this unit</strong> → " + fm(qty * product.gpuMemoryGB) +
               " GB pooled (needs " + fm(need) + " GB), " + fm(qty * product.watts) + " W, <strong>$" +
@@ -433,6 +544,7 @@
             if (product.tier === "Desktop card") {
               html += " ⚠️ <em>But honestly: " + qty + " desktop cards have the memory on paper and can't team up fast enough to run one big model — the \"pile of desktop cards\" trap.</em>";
             }
+            html += buildLink;
           }
           out.classList.remove("muted");
           out.innerHTML = html;
@@ -475,9 +587,23 @@
     });
     var angle = 0, baseVel = reduceMotion ? 0 : 0.12, vel = baseVel;
     var dragging = false, lastX = 0, moved = 0;
+    var step = 360 / n;
+    // Items facing away used to render as unreadable mirrored slivers.
+    // Fade and soften them by how far they've turned from the viewer, so the
+    // front machine reads clearly and the rest become depth, not noise.
+    var updateFacing = function () {
+      items.forEach(function (it, i) {
+        var a = (angle + i * step) * Math.PI / 180;
+        var f = (Math.cos(a) + 1) / 2;          // 1 = facing the viewer
+        var ease = f * f;
+        it.style.opacity = (0.18 + 0.82 * ease).toFixed(3);
+        it.style.filter = ease > 0.92 ? "none" : "blur(" + ((1 - ease) * 2.4).toFixed(2) + "px)";
+      });
+    };
     (function spin() {
       if (!dragging) angle += vel;
       car.style.transform = "translateZ(-" + radius + "px) rotateY(" + angle + "deg)";
+      updateFacing();
       requestAnimationFrame(spin);
     })();
     showcase.addEventListener("mouseenter", function () { vel = baseVel * 0.25; });

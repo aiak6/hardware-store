@@ -33,6 +33,9 @@ app.get("/advisor", (_req, res) => {
 // Interactive side-by-side hardware comparison.
 app.get("/compare", (_req, res) => send(res, view.compare(data.PRODUCTS)));
 
+// The plain-words dictionary — the whole GLOSSARY on one teachable page.
+app.get("/glossary", (_req, res) => send(res, view.glossary()));
+
 // "Find my match" — 3-question wizard that ends in an honest model + build pick.
 app.get("/match", (_req, res) => {
   const map = { qwen: "qwen3-235b", deepseek: "deepseek-v3-671b", kimi: "kimi-k2-1000b" };
@@ -67,7 +70,10 @@ app.get("/quote", (req, res) => {
     else if (req.query.type && /mid/i.test(req.query.type)) rec = advisor.midsizeRecommendation();
     else rec = advisor.minimumBuildForModel(model);
   }
-  send(res, view.quoteForm(model, rec, req.query.type));
+  // No build chosen (e.g. the nav button): offer the three honest builds
+  // as pickable cards so the store's main CTA never lands on a blank form.
+  const pickerRecs = model ? null : data.MODELS.map((m) => advisor.minimumBuildForModel(m));
+  send(res, view.quoteForm(model, rec, req.query.type, pickerRecs));
 });
 
 // Basic abuse protection: max 5 quote submissions per IP per 10 minutes,
@@ -86,12 +92,12 @@ app.post("/quote", async (req, res) => {
   if (req.body.website) {
     // honeypot tripped — humans never see this field
     return res.status(400).type("html").send(
-      view.layout("Blocked", `<section class="card"><h1>That looked automated 🤖</h1><p>If you're a real customer, go back and try again — leave the hidden field alone.</p></section>`, "/advisor")
+      view.layout("Blocked", `<section class="card"><h1>That looked automated 🤖</h1><p>If you're a real customer, go back and try again — leave the hidden field alone.</p><div class="cta-row"><a class="btn primary" href="javascript:history.back()">← Back to the form</a></div></section>`, "/advisor")
     );
   }
   if (rateLimited(req.ip)) {
     return res.status(429).type("html").send(
-      view.layout("Slow down", `<section class="card"><h1>Easy there ⚡</h1><p>That's a lot of quote requests from one connection. Give it a few minutes and try again.</p></section>`, "/advisor")
+      view.layout("Slow down", `<section class="card"><h1>Easy there ⚡</h1><p>That's a lot of quote requests from one connection. Give it a few minutes and try again.</p><div class="cta-row"><a class="btn ghost" href="/">Back to the store</a></div></section>`, "/advisor")
     );
   }
   try {
@@ -108,7 +114,7 @@ app.post("/quote", async (req, res) => {
   } catch (e) {
     console.error("Failed to save request:", e);
     res.status(500).type("html").send(
-      view.layout("Error", `<section class="card"><h1>Something went wrong</h1><p>We couldn't save your request. Please try again.</p></section>`, "/advisor")
+      view.layout("Error", `<section class="card"><h1>Something went wrong</h1><p>We couldn't save your request — nothing was charged and nothing was lost. Go back and try submitting again.</p><div class="cta-row"><a class="btn primary" href="javascript:history.back()">← Back to the form</a><a class="btn ghost" href="/">Home</a></div></section>`, "/advisor")
     );
   }
 });
@@ -121,7 +127,7 @@ app.get("/requests", async (_req, res) => {
   } catch (e) {
     console.error("Failed to list requests:", e);
     res.status(500).type("html").send(
-      view.layout("Error", `<section class="card"><h1>Database not reachable</h1><p>Check the Postgres connection (see README).</p></section>`, "/requests")
+      view.layout("Error", `<section class="card"><h1>The request book is briefly unavailable</h1><p class="muted">We couldn't reach the database just now. The rest of the store works fine — try this page again in a minute.</p><div class="cta-row"><a class="btn primary" href="/requests">Try again</a><a class="btn ghost" href="/">Back to the store</a></div></section>`, "/requests")
     );
   }
 });

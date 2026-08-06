@@ -21,77 +21,95 @@ const GLOSSARY = {
   gpuMemory: {
     term: "GPU memory (VRAM)",
     plain:
-      "The single most important number. A model's 'weights' — its entire brain — must fit inside the GPU's own memory all at once, or the model simply will not run. If a model needs 282 GB and your cards add up to 240 GB, it doesn't run slowly, it doesn't run at all. This is the number that decides what you can buy.",
+      "The one number that decides everything. The whole model must fit inside the graphics cards' own memory, all at once. If it doesn't fit, it doesn't run. Not slowly — not at all.",
+    picture:
+      "A model is a set of encyclopedias and GPU memory is the shelf. If the shelf is too short for the whole set, you can't look anything up.",
     whenItMatters:
-      "Always. It's the first thing to check for any model. Bigger model = more GPU memory, no exceptions.",
+      "Always. Check it first, every time. Bigger model = bigger shelf, no exceptions.",
   },
   gpuCount: {
     term: "Number of GPUs",
     plain:
-      "Big models don't fit on one card, so you link several together and their memory adds up. Four 96 GB cards give you 384 GB of usable pool. More GPUs also means more speed for more users at once.",
+      "Big models don't fit on one card, so you link a few cards and their memory adds up. Four 96 GB cards act like one 384 GB pool. More cards can also serve more people at once.",
+    picture:
+      "Pushing desks together to make one big table.",
     whenItMatters:
-      "When one card isn't big enough for the model, or when you need to serve many users at the same time.",
+      "When one card is too small for the model, or too slow for all your users.",
   },
   cpu: {
     term: "CPU",
     plain:
-      "The general-purpose brain that runs the operating system and feeds data to the GPUs. For running an AI model, the CPU mostly directs traffic — the heavy thinking happens on the GPU. A strong CPU helps, but it is not what decides whether a model runs.",
+      "The computer's general manager. It runs the operating system and hands work to the GPUs — but the heavy AI thinking happens on the GPUs, not here.",
+    picture:
+      "The CPU is the waiter, the GPUs are the kitchen. A better waiter doesn't cook the meal faster.",
     whenItMatters:
-      "It matters for data loading and juggling many requests — but it is NOT the number that decides if a model fits. Don't overpay here.",
+      "It never decides whether a model fits. Don't overpay here.",
   },
   systemRam: {
     term: "System RAM",
     plain:
-      "The computer's short-term memory (separate from GPU memory). It stages the model on its way to the GPUs and holds everything else the server is doing. Useful, but it is not where the model actually runs.",
+      "The computer's own short-term memory, separate from GPU memory. It helps move the model around and keeps the rest of the machine running — but the model does not run in it.",
+    picture:
+      "The loading dock, not the shelf. Goods pass through; they don't live there.",
     whenItMatters:
-      "Handy to have a healthy amount, but it does NOT substitute for GPU memory. A model that needs 800 GB of GPU memory is not helped by 800 GB of system RAM.",
+      "Nice to have plenty. But it can never stand in for GPU memory — not one gigabyte of it.",
   },
   watts: {
     term: "Power draw (watts)",
     plain:
-      "How much electricity the machine burns while it's on. It's a running cost (your power bill) and a design problem (all that power turns into heat you have to cool). A watt is a watt — it shows up on your bill every second the machine runs.",
+      "How much electricity the machine drinks every second it's switched on. You pay for it on every power bill, and all of it turns into heat you then have to cool away.",
+    picture:
+      "One 600 W card burns like ten old 60 W light bulbs — all day, every day.",
     whenItMatters:
-      "Every day you own it. Two builds can cost the same to buy but very different amounts to run.",
+      "Every day you own the machine. Cheap to buy can still be expensive to run.",
   },
   electricityCost: {
     term: "Electricity cost per month",
     plain:
-      "The power bill, turned into money. We assume the machine runs around the clock at an average US electricity price of about $0.17 per kilowatt-hour. Formula: kilowatts × 24 hours × 30 days × $0.17. Your local rate will differ, but this makes 'watts' feel like what it really is: a monthly bill.",
+      "The watts, turned into money. We assume the machine runs day and night at about $0.17 per kilowatt-hour (an average US price). Your local rate will differ a little.",
+    picture:
+      "Watts are the appetite; this is the grocery bill.",
     whenItMatters:
-      "When comparing builds. A cheap-to-buy machine that burns twice the power can cost more within a couple of years.",
+      "When comparing builds. Over a few years, the power bill can rival the sticker price.",
   },
   price: {
     term: "Price",
     plain:
-      "What you pay once, up front, to own the hardware. It does not include the electricity to run it, the cooling, or the room to put it in — those are ongoing.",
+      "What you pay once, up front, to own the hardware. Electricity, cooling, and a room to put it in are extra — and they never stop.",
+    picture:
+      "The price is the puppy. The power bill is the dog food.",
     whenItMatters:
-      "At purchase. But always read it next to the power draw: cheap-to-buy can be expensive-to-run.",
+      "At purchase — but always read it next to the power draw.",
   },
   parameters: {
     term: "Parameters (the 'B' in the name)",
     plain:
-      "A model's size, counted in billions of adjustable numbers it learned during training. 'Qwen3-235B' means 235 billion parameters. More parameters usually means a smarter model — and, crucially, more GPU memory needed to run it. The 'B' is your first clue to how big a machine you'll need.",
+      "How big the model is: billions of little numbers it learned during training. 'Qwen3-235B' means 235 billion of them. Bigger usually means smarter — and always means more GPU memory.",
+    picture:
+      "Parameters are the pages; the 'B' on the spine tells you how big a shelf you'll need.",
     whenItMatters:
-      "It's the starting point for every buying decision: parameters tell you the memory, memory tells you the hardware.",
+      "Start here. The B-number tells you the memory, and the memory tells you the machine.",
   },
   cluster: {
     term: "Cluster",
     plain:
-      "A cluster is several machines wired together with fast links so they behave like one much larger computer, pooling their memory and power.",
+      "Several machines wired together with very fast links, so they act like one much bigger machine — pooling their memory and their effort.",
+    picture:
+      "A rowing crew, not a crowd. Eight rowers only count as one boat if they stroke in perfect time.",
     whenItMatters:
-      "When a single machine can't hold the model, or can't serve enough users. See the honest note below about real clusters vs. a pile of desktop cards.",
+      "When one machine can't hold the model. See the honest note about real clusters vs. a pile of desktop cards.",
   },
   homes: {
     term: "Homes-worth of power",
     plain:
-      "A way to feel a wattage instead of just reading it. An average home draws about 1,200 watts around the clock, so a 135,000-watt rack burns power like about 112 homes — all day, every day.",
+      "A way to feel a wattage instead of just reading it. An average home draws about 1,200 watts around the clock — so a 135,000-watt rack burns power like about 112 homes, all day, every day.",
     whenItMatters:
       "When you're deciding whether your building (and budget) can even feed the machine.",
   },
   evBattery: {
-    term: "EV-batteries per hour",
+    term: "EV-batteries per day",
     plain:
-      "Another way to feel the power: a typical electric-car battery holds about 90 kWh. If a machine draws 135 kW, it uses up about 1.5 full EV batteries of energy every single hour.",
+      "Another way to feel it: a typical electric-car battery holds about 90 kWh. A big machine can drain several of them every single day.",
     whenItMatters:
       "When you want a gut sense of energy over time, not just an instant number.",
   },
@@ -113,6 +131,10 @@ const CLUSTER_TRUTH = {
 const PRODUCTS = [
   {
     id: "rtx-5090",
+    bestFor: "One person learning, building, and running small models at home.",
+    year: 2025,
+    curatorNote:
+      "The people's exhibit. Most visitors' first — and often only — acquisition.",
     name: "NVIDIA GeForce RTX 5090",
     tier: "Desktop card",
     blurb: "The entry point. A single desktop card for experimenting and small models.",
@@ -124,7 +146,7 @@ const PRODUCTS = [
     isNode: false,      // a single card, not a complete server
     gpusInUnit: 1,
     realWorldNote:
-      "MSRP $1,999 at launch (Jan 2025), 32 GB, 575 W TDP. Great for one person; far too small for a 100B+ model on its own.",
+      "Launch price $1,999 (Jan 2025), 32 GB, 575 W. Great for one person; far too small for a 100B+ model on its own.",
     photo: {
       src: "/img/rtx-5090.png",
       alt: "Palit GeForce RTX 5090 GameRock graphics card, three-fan cooler",
@@ -136,6 +158,10 @@ const PRODUCTS = [
   },
   {
     id: "rtx-pro-6000",
+    bestFor: "A startup's first serious AI machine — buy three, run a 235B model.",
+    year: 2025,
+    curatorNote:
+      "The connoisseur's shortcut: three of these quietly equal one very large machine.",
     name: "NVIDIA RTX PRO 6000 Blackwell",
     tier: "Workstation card",
     blurb: "A professional card with lots of memory — the honest cheapest way to reach big-model memory by ganging a few together.",
@@ -147,10 +173,14 @@ const PRODUCTS = [
     isNode: false,
     gpusInUnit: 1,
     realWorldNote:
-      "~$8,500 street price, 96 GB, 600 W. Three of these give a 288 GB pool — enough to honestly run a 235B model (which needs 282 GB).",
+      "~$8,500 in shops, 96 GB, 600 W. Three of these pool 288 GB — honestly enough for a 235B model (which needs 282 GB).",
   },
   {
     id: "h100-80",
+    bestFor: "Getting real datacenter power at last-generation prices.",
+    year: 2022,
+    curatorNote:
+      "The workhorse of the first AI gold rush. Already a period piece; still pulling.",
     name: "NVIDIA H100 (80 GB SXM)",
     tier: "Datacenter GPU",
     blurb: "The workhorse datacenter GPU of the last generation. Sold as part of a server.",
@@ -174,6 +204,10 @@ const PRODUCTS = [
   },
   {
     id: "h200-141",
+    bestFor: "Running one big model properly, with room to breathe.",
+    year: 2024,
+    curatorNote:
+      "The same frame as the H100, three-quarters more memory — refinement, not spectacle.",
     name: "NVIDIA H200 (141 GB)",
     tier: "Datacenter GPU",
     blurb: "More memory than the H100 at the same power — the sweet spot for very large models.",
@@ -189,13 +223,17 @@ const PRODUCTS = [
   },
   {
     id: "dgx-h200",
+    bestFor: "A company that wants one plug-in box that just works.",
+    year: 2024,
+    curatorNote:
+      "Eight minds in one case — the first exhibit that is a machine room, not a machine.",
     name: "NVIDIA DGX H200 (8× H200 node)",
     tier: "Server node",
     blurb: "A complete, ready-to-run server: eight H200s wired together with NVLink. One box, 1,128 GB pooled.",
     priceUSD: 400000,
     gpuMemoryGB: 1128,       // 8 × 141
     watts: 10200,            // full system, not just GPUs
-    cpuNote: "Includes dual server CPUs and 2 TB of system RAM — a turnkey machine.",
+    cpuNote: "Includes two server CPUs and 2 TB of system RAM — plug in and go.",
     memoryType: "8 × 141 GB HBM3e (1,128 GB pooled via NVLink)",
     isNode: true,
     gpusInUnit: 8,
@@ -212,13 +250,17 @@ const PRODUCTS = [
   },
   {
     id: "gb300-nvl72",
+    bestFor: "Serving AI to thousands of users at once — the whole store's ceiling.",
+    year: 2025,
+    curatorNote:
+      "The apex object of the collection. The curator advises most visitors to admire, not acquire.",
     name: "NVIDIA GB300 NVL72 (Blackwell Ultra rack)",
     tier: "Datacenter rack",
     blurb: "The top of the shop. A full rack: 72 Blackwell Ultra GPUs acting as one enormous machine.",
     priceUSD: 3500000,
     gpuMemoryGB: 20700,      // ~20.7 TB
     watts: 135000,           // 135 kW
-    cpuNote: "36 Grace CPUs, NVIDIA networking, liquid-cooled — a rack-scale system.",
+    cpuNote: "36 Grace CPUs, NVIDIA networking, liquid-cooled — one whole rack working as a single machine.",
     memoryType: "72 × 288 GB HBM3e (~20.7 TB pooled)",
     isNode: true,
     gpusInUnit: 72,
@@ -258,7 +300,7 @@ const MODELS = [
     license: "MIT (open source)",
     maker: "DeepSeek",
     summary:
-      "A heavyweight open model with excellent agentic performance. Needs a full datacenter server.",
+      "A heavyweight open model that is very good at 'agent' work — using tools and acting on its own. Needs a full datacenter server.",
   },
   {
     id: "kimi-k2-1000b",
